@@ -5,6 +5,22 @@ import argparse # this module allows Python to accept arguments in the command l
 config = dotenv_values('.env')
 openai.api_key=config["API_KEY"]
 
+# Three different functions to make the text bold, red or blue
+def bold(text):
+    bold_start= "\033[1m"
+    bold_end="\033[0m"
+    return bold_start + text + bold_end
+
+def blue(text):
+    blue_start= "\033[34m"
+    blue_end="\033[0m"
+    return blue_start + text + blue_end
+
+def red(text):
+    red_start= "\033[31m"
+    red_end="\033[0m"
+    return red_start + text + red_end
+
 def main():
     
     parser = argparse.ArgumentParser(description="Simple command line chatbot with GPT-3.5")
@@ -22,7 +38,7 @@ def main():
 
     while True:
         try:
-            user_input = input("You: ")
+            user_input = input(bold(blue("You: ")))
             messages.append({"role": "user", "content": user_input})
             res = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -30,7 +46,7 @@ def main():
             )
 
             messages.append(res["choices"][0]["message"].to_dict())
-            print("Assistant:", res["choices"][0]["message"]["content"])
+            print(bold(red("Assistant:")), res["choices"][0]["message"]["content"])
 
 
         except KeyboardInterrupt:
