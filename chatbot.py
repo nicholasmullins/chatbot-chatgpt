@@ -11,11 +11,15 @@ messages = []
 while True:
     try:
         user_input = input("You: ")
+        messages.append({"role": "user", "content": user_input})
         res = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": user_input}]
+            messages=messages
         )
-        print(res["choices"][0]["message"])
+
+        messages.append(res["choices"][0]["message"].to_dict())
+        print("Assistant:", res["choices"][0]["message"]["content"])
+ 
 
     except KeyboardInterrupt:
         print("Exiting...")
